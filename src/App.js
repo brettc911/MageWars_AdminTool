@@ -5,20 +5,29 @@ class App extends Component {
   constructor(){
     super()
     this.state = {
-      cardName: "",
-      primaryType: "",
-      subTypes: [{name: ""}],
-      manaCsot: "",
-      action: "",
-      castRange: "",
-      target: "",
-      schools: [{name: "", level: ""}],
-      armor: "",
-      health: "",
-      defense: "",
-      equipmentSlot: [],
-      abilities: [],
-      description: ""
+      cardName: undefined,
+      primaryType: undefined,
+      subTypes: [{name: undefined}],
+      manaCsot: undefined,
+      action: undefined,
+      castRange: undefined,
+      target: undefined,
+      schools: [{name: undefined, level: undefined}],
+      armor: undefined,
+      health: undefined,
+      defense: {roll: undefined, uses: undefined},
+      channeling: undefined,
+      equipmentSlot: undefined,
+      abilities: [{
+                    name: "",
+                    action: "",
+                    range: "",
+                    damageType: "",
+                    dice: "",
+                    effects: [{roll: "", effectType: ""}],
+                    damageModifiers: [{modifier: "", bonus: ""}]
+                 }],
+      description: undefined
     }
 
   }
@@ -26,17 +35,17 @@ class App extends Component {
   // Handle Functions
   // __________________________________________________________
   handleCardNameChange = e => {
-    this.setState({cardName: e.target.value})
+    this.setState({ cardName: e.target.value })
   }
   handlePrimaryTypeChange = e => {
-    this.setState({primaryType: e.target.value})
+    this.setState({ primaryType: e.target.value })
   }
   handleSubTypeNameChange = idx => e => {
     const newSubTypes = this.state.subTypes.map((type, sidx) => {
       if (idx !== sidx) return type;
       return {...type, name: e.target.value}
     })
-    this.setState({subTypes: newSubTypes})
+    this.setState({ subTypes: newSubTypes })
   }
   handleAddSubType = e => {
     e.preventDefault()
@@ -44,25 +53,20 @@ class App extends Component {
       subTypes: this.state.subTypes.concat([{ name: "", level: ""}])
     });
   }
-  handleRemoveSubType = idx => () => {
+  handleRemoveSubType = idx => (e) => {
+    e.preventDefault()
     this.setState({
       subTypes: this.state.subTypes.filter((sub, sidx) => idx !== sidx)
     })
   }
   handleManaCostChange = e => {
-    this.setState({
-      manaCsot: e.target.value
-    })
+    this.setState({ manaCsot: e.target.value })
   }
   handleCastRangeChange = e => {
-    this.setState({
-      castRange: e.target.value
-    })
+    this.setState({ castRange: e.target.value })
   }
   handleTargetChange = e => {
-    this.setState({
-      target: e.target.value
-    })
+    this.setState({ target: e.target.value })
   }
   handleSchoolNameChange = idx => e => {
     console.log(this.state.schools.name);
@@ -70,7 +74,7 @@ class App extends Component {
       if (idx !== sidx) return type;
       return {...type, name: e.target.value}
     })
-    this.setState({schools: newSchools})
+    this.setState({ schools: newSchools })
   }
   handleSchoolLevelChange = idx => e => {
     console.log(this.state.schools.level);
@@ -78,7 +82,7 @@ class App extends Component {
       if (idx !== sidx) return type;
       return {...type, level: e.target.value}
     })
-    this.setState({schools: newSchools})
+    this.setState({ schools: newSchools })
   }
   handleAddSchool = e => {
     e.preventDefault()
@@ -86,11 +90,64 @@ class App extends Component {
       schools: this.state.schools.concat([{ name: "", level: ""}])
     });
   }
-  handleRemoveSchool = idx => () => {
+  handleRemoveSchool = (idx) => (e) => {
+    e.preventDefault()
     this.setState({
-      schools: this.state.schools.filter((sub, sidx) => idx !== sidx)
-    })
+      schools: this.state.schools.filter((s, sidx) => idx !== sidx) })
   }
+  handleHealthChange = e => {
+    this.setState({ health: e.target.value })
+  }
+  handleArmorChange = e => {
+    this.setState({ armor: e.target.value })
+  }
+  handleDefenseRollChange = e => {
+    this.setState({ defense: {roll: e.target.value, uses: this.state.defense.uses} })
+  }
+  handleDefenseUsesChange = e => {
+    this.setState({ defense: {roll: this.state.defense.roll, uses: e.target.value} })
+  }
+  handleChannelingChange = e => {
+    this.setState({ channeling: e.target.value })
+  }
+  handleEquipmentChange = e => {
+    this.setState({ equipmentSlot: e.target.value })
+  }
+
+  handleAddAbility = e => {
+    e.preventDefault()
+    this.setState({
+      abilities: this.state.abilities.concat([{
+                    name: "",
+                    action: "",
+                    range: "",
+                    damageType: "",
+                    dice: "",
+                    effects: [{roll: "", effectType: ""}],
+                    damageModifiers: [{modifier: "", bonus: ""}]
+                 }])
+    });
+  }
+  handleRemoveAbility = (idx) => (e) => {
+    e.preventDefault()
+    this.setState({
+      abilities: this.state.abilities.filter((s, sidx) => idx !== sidx) })
+  }
+  handleAbilityNameChange = idx => e => {
+    const newAbilities = this.state.abilities.map((abil, sidx) => {
+      if (idx !== sidx) return abil;
+      return {...abil, name: e.target.value}
+    })
+    this.setState({ abilities: newAbilities })
+  }
+  handleAbilityActionChange = idx => e => {
+    const newAbilities = this.state.abilities.map((abil, sidx) => {
+      if (idx !== sidx) return abil;
+      return {...abil, action: e.target.value}
+    })
+    this.setState({ abilities: newAbilities })
+  }
+
 
 
 
@@ -155,6 +212,7 @@ class App extends Component {
           <div>
             <label>Mana cost:</label>
               <select onChange={this.handleManaCostChange}>
+                <option></option>
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
@@ -164,8 +222,9 @@ class App extends Component {
           <div>
             <label>Action:</label>
               <select onChange={this.handleActionChange}>
-                <option value="Full">Full</option>
-                <option value="Quick">Quick</option>
+                <option></option>
+                <option value="full">Full</option>
+                <option value="quick">Quick</option>
               </select>
           </div>
 
@@ -186,6 +245,7 @@ class App extends Component {
           </div>
 
           <div>
+            <label>Schools:</label>
             {
               this.state.schools.map((type, idx) => (
                 <div>
@@ -195,6 +255,7 @@ class App extends Component {
                   onChange={this.handleSchoolNameChange(idx)}
                 />
               <select onChange={this.handleSchoolLevelChange(idx)}>
+                  <option></option>
                   <option value="1">1</option>
                   <option value="2">2</option>
                   <option value="3">3</option>
@@ -206,8 +267,132 @@ class App extends Component {
             <button onClick={this.handleAddSchool}>Add</button>
           </div>
 
+          <div>
+            <label>Health:</label>
+              <input onChange={this.handleHealthChange}/>
+          </div>
+
+          <div>
+            <label>Armor:</label>
+              <input onChange={this.handleArmorChange}/>
+          </div>
+
+          <div>
+            <label>Defense Roll:</label>
+              <select onChange={this.handleDefenseRollChange}>
+                <option></option>
+                <option value="1+">1+</option>
+                <option value="2+">2+</option>
+                <option value="3+">3+</option>
+              </select>
+            <label>Defense use number:</label>
+              <select onChange={this.handleDefenseUsesChange}>
+                <option></option>
+                <option value="infinite">infinite</option>
+                <option value="1x">1x</option>
+                <option value="2x">2x</option>
+                <option value="3x">3x</option>
+              </select>
+          </div>
+
+          <div>
+            <label>Channeling:</label>
+              <select onChange={this.handleChannelingChange}>
+                <option></option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+              </select>
+          </div>
+
+          <div>
+            <label>Equipment Slot:</label>
+              <div>
+                <label>
+                  <input type="radio" value="" name="equipment" onChange={this.handleEquipmentChange}/>None
+                </label>
+              </div>
+              <div>
+                <label>
+                  <input type="radio" value="helmet" name="equipment" onChange={this.handleEquipmentChange}/>Helment
+                </label>
+              </div>
+              <div>
+                <label>
+                  <input type="radio" value="amulet" name="equipment" onChange={this.handleEquipmentChange}/>Amulet
+                </label>
+              </div>
+              <div>
+                <label>
+                  <input type="radio" value="cloak" name="equipment" onChange={this.handleEquipmentChange}/>Cloak
+                </label>
+              </div>
+              <div>
+                <label>
+                  <input type="radio" value="ring" name="equipment" onChange={this.handleEquipmentChange}/>Ring
+                </label>
+              </div>
+              <div>
+                <label>
+                  <input type="radio" value="chest" name="equipment" onChange={this.handleEquipmentChange}/>Chest Piece
+                </label>
+              </div>
+              <div>
+                <label>
+                  <input type="radio" value="belt" name="equipment" onChange={this.handleEquipmentChange}/>Belt
+                </label>
+              </div>
+              <div>
+                <label>
+                  <input type="radio" value="gloves" name="equipment" onChange={this.handleEquipmentChange}/>Gloves
+                </label>
+              </div>
+              <div>
+                <label>
+                  <input type="radio" value="shield" name="equipment" onChange={this.handleEquipmentChange}/>Shield
+                </label>
+              </div>
+              <div>
+                <label>
+                  <input type="radio" value="boots" name="equipment" onChange={this.handleEquipmentChange}/>Boots
+                </label>
+              </div>
+              <div>
+                <label>
+                  <input type="radio" value="weapon or shield" name="equipment" onChange={this.handleEquipmentChange}/>One-handed Weapon
+                </label>
+              </div>
+              <div>
+                <label>
+                  <input type="radio" value="weapon and shield " name="equipment" onChange={this.handleEquipmentChange}/>Two-handed Weapon
+                </label>
+              </div>
+
+              <div>
+                <label>Abilities:</label>
+                  {
+                    this.state.abilities.map((abil, idx) => (
+                      <div>
+                        <input
+                          placeholder={`Ability ${idx + 1}`}
+                          value={abil.name}
+                          onChange={this.handleAbilityNameChange(idx)}
+                        />
+                        <select onChange={this.handleAbilityActionChange(idx)}>
+                          <option></option>
+                          <option value="full">Full</option>
+                          <option value="quick">Quick</option>
+                        </select>
+                        <button onClick={this.handleRemoveAbility(idx)}> - </button>
+                      </div>
+                    ))
+                  }
+                  <button onClick={this.handleAddAbility}>Add</button>
+              </div>
 
 
+            </div>
 
 
 
