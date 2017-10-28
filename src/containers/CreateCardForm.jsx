@@ -225,6 +225,78 @@ class CreateCardForm extends Component {
     })
     this.setState({ abilities: newAbilities })
   }
+// Effects -------
+handleAbilityDiceChange = idx => e => {
+  const newAbilities = this.state.abilities.map((abil, sidx) => {
+    if (idx !== sidx) return abil;
+    return {...abil, dice: e.target.value}
+  })
+  this.setState({ abilities: newAbilities })
+}
+
+
+handleAddAbilityEffect = idx => (e) => {
+  e.preventDefault()
+  const newAbilities = this.state.abilities.map((abil, aidx) => {
+    if (idx !== aidx) return abil
+      return {...abil, effects: this.state.abilities[idx].effects.concat([{ roll: "", effectType: ""}]) }
+  })
+  this.setState({ abilities: newAbilities })
+}
+
+handleRemoveAbilityEffect = idx => (e) => {
+  e.preventDefault()
+  const newAbilities = this.state.abilities.map((abil, aidx) => {
+    if (idx !== aidx) return abil
+    return {...abil, effects: this.state.abilities[idx].effects.filter((eff, sidx) => idx !== sidx) }
+  })
+  this.setState({ abilities: newAbilities })
+}
+
+handleAbilityEffectRollChange = (idx, eidx) => e => {
+  const newAbilities = this.state.abilities.map((abil, aidx) => {
+    if (idx !== aidx) return abil
+      const newEffects = abil.effects.map((eff, tidx) => {
+        if (tidx !== eidx) return eff
+        return {...eff, roll: e.target.value}
+      })
+      return {...abil, effects: newEffects}
+  })
+  this.setState({ abilities: newAbilities })
+}
+
+handleAbilityEffectTypeChange = (idx, eidx) => e => {
+  const newAbilities = this.state.abilities.map((abil, aidx) => {
+    if (idx !== aidx) return abil
+      const newEffects = abil.effects.map((eff, tidx) => {
+        if (tidx !== eidx) return eff
+        return {...eff, effectType: e.target.value}
+      })
+      return {...abil, effects: newEffects}
+  })
+  this.setState({ abilities: newAbilities })
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -455,7 +527,6 @@ class CreateCardForm extends Component {
                       <label>Name:</label>
                       <input
                         placeholder={`Ability ${idx + 1}`}
-                        value={abil.name}
                         onChange={this.handleAbilityNameChange(idx)}
                       />
                       <label>Action:</label>
@@ -490,8 +561,21 @@ class CreateCardForm extends Component {
                         {this.renderOptions(12)}
                       </select>
                       <label>Effects:</label>
+                        {
+                          this.state.abilities[idx].effects.map((eff, eidx) => (
+                            <div>
+                              <h1>{`Effect ${eidx + 1}`}</h1>
+                              <label>Roll:</label>
+                              <input onChange={this.handleAbilityEffectRollChange(idx, eidx)}/>
+                              <label>Type:</label>
+                              <input onChange={this.handleAbilityEffectTypeChange(idx, eidx)}/>
+                              <button onClick={this.handleRemoveAbilityEffect(idx)}>Remove Effect</button>
+                            </div>
+                          ))
+                        }
+                        <button onClick={this.handleAddAbilityEffect(idx)}>Add Effect</button>
 
-                      <button onClick={this.handleRemoveAbility(idx)}> Remove </button>
+                      <button onClick={this.handleRemoveAbility(idx)}> Remove Ability </button>
                     </SecondaryContainer>
                   ))
                 }
