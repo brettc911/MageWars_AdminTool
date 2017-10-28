@@ -54,9 +54,9 @@ class CreateCardForm extends Component {
                     damageType: "",
                     dice: "",
                     effects: [{roll: "", effectType: ""}],
-                    damageModifiers: [{modifier: "", bonus: ""}]
+                    traits: [{type: "", bonus: ""}]
                  }],
-      description: undefined
+      details: ""
     }
 
   }
@@ -181,7 +181,7 @@ class CreateCardForm extends Component {
         damageType: "",
         dice: "",
         effects: [{roll: "", effectType: ""}],
-        damageModifiers: [{modifier: "", bonus: ""}]
+        traits: [{trait: "", bonus: ""}]
      }])
    });
   }
@@ -225,16 +225,8 @@ class CreateCardForm extends Component {
     })
     this.setState({ abilities: newAbilities })
   }
+
 // Effects -------
-handleAbilityDiceChange = idx => e => {
-  const newAbilities = this.state.abilities.map((abil, sidx) => {
-    if (idx !== sidx) return abil;
-    return {...abil, dice: e.target.value}
-  })
-  this.setState({ abilities: newAbilities })
-}
-
-
 handleAddAbilityEffect = idx => (e) => {
   e.preventDefault()
   const newAbilities = this.state.abilities.map((abil, aidx) => {
@@ -276,6 +268,55 @@ handleAbilityEffectTypeChange = (idx, eidx) => e => {
   })
   this.setState({ abilities: newAbilities })
 }
+
+// Traits -----
+handleAddAbilityTrait = idx => (e) => {
+  e.preventDefault()
+  const newAbilities = this.state.abilities.map((abil, aidx) => {
+    if (idx !== aidx) return abil
+      return {...abil, traits: this.state.abilities[idx].traits.concat([{ type: "", bonus: ""}]) }
+  })
+  this.setState({ abilities: newAbilities })
+}
+
+handleRemoveAbilityTrait = idx => (e) => {
+  e.preventDefault()
+  const newAbilities = this.state.abilities.map((abil, aidx) => {
+    if (idx !== aidx) return abil
+    return {...abil, traits: this.state.abilities[idx].traits.filter((eff, sidx) => idx !== sidx) }
+  })
+  this.setState({ abilities: newAbilities })
+}
+
+handleAbilityTraitTypeChange = (idx, eidx) => e => {
+  const newAbilities = this.state.abilities.map((abil, aidx) => {
+    if (idx !== aidx) return abil
+      const newTraits = abil.traits.map((tra, tidx) => {
+        if (tidx !== eidx) return tra
+        return {...tra, type: e.target.value}
+      })
+      return {...abil, traits: newTraits}
+  })
+  this.setState({ abilities: newAbilities })
+}
+
+handleAbilityTraitBonusChange = (idx, eidx) => e => {
+  const newAbilities = this.state.abilities.map((abil, aidx) => {
+    if (idx !== aidx) return abil
+      const newTraits = abil.traits.map((tra, tidx) => {
+        if (tidx !== eidx) return tra
+        return {...tra, bonus: e.target.value}
+      })
+      return {...abil, traits: newTraits}
+  })
+  this.setState({ abilities: newAbilities })
+}
+
+// ----- EQUIPMENT -----
+handleDetailsChange = e => {
+  this.setState({ details: e.target.value })
+}
+
 
 
 
@@ -574,12 +615,31 @@ handleAbilityEffectTypeChange = (idx, eidx) => e => {
                           ))
                         }
                         <button onClick={this.handleAddAbilityEffect(idx)}>Add Effect</button>
+                      <label>Traits:</label>
+                        {
+                          this.state.abilities[idx].traits.map((tra, eidx) => (
+                            <div>
+                              <h1>{`Trait ${eidx + 1}`}</h1>
+                              <label>Type:</label>
+                              <input onChange={this.handleAbilityTraitTypeChange(idx, eidx)}/>
+                              <label>Bonus:</label>
+                              <input onChange={this.handleAbilityTraitBonusChange(idx, eidx)}/>
+                              <button onClick={this.handleRemoveAbilityTrait(idx)}>Remove Trait</button>
+                            </div>
+                          ))
+                        }
+                        <button onClick={this.handleAddAbilityTrait(idx)}>Add Trait</button>
 
                       <button onClick={this.handleRemoveAbility(idx)}> Remove Ability </button>
                     </SecondaryContainer>
                   ))
                 }
                 <button onClick={this.handleAddAbility}>Add Ability</button>
+            </PrimaryContainer>
+
+            <PrimaryContainer>
+              <PrimaryLabel>Details:</PrimaryLabel><br></br>
+                <textarea rows="8" cols="80" onChange={this.handleDetailsChange}></textarea>
             </PrimaryContainer>
 
 
