@@ -348,20 +348,19 @@ handleDetailsChange = e => {
     console.log(this.state);
     e.preventDefault()
 
-    // Creating a card with the current state
-    // let card = JSON.stringify(this.state);
-    // fetch('https://secret-gorge-71512.herokuapp.com/api/card', {
-    //   method: 'POST',
-    //   body: card,
-    //   headers: {
-    //     'Accept': 'application/json',
-    //     'Content-Type': 'application/json'
-    //   }
-    // })
-    // .then(response => response.json())
-    // .then(data => {
-    //   console.log(data);
-    // })
+    let card = JSON.stringify(this.state);
+    fetch('https://secret-gorge-71512.herokuapp.com/api/card', {
+      method: 'POST',
+      body: card,
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log(data);
+    })
 
   }
 
