@@ -9,12 +9,15 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 // Import Components
 import CreateCardForm from './containers/CreateCardForm';
 import Dashboard from './containers/Dashboard';
+import CardManager from './containers/CardManager';
 
 ReactDOM.render(
   <BrowserRouter>
       <Switch>
-        <Route path ="/create" component={CreateCardForm} />
-        <Route path ="/" component={Dashboard} />
+        <Dashboard>
+          <Route path ="/create" component={CreateCardForm} />
+          <Route path ="/cardManager" component={CardManager} />
+        </Dashboard>
       </Switch>
   </BrowserRouter>
   , document.getElementById('root'));

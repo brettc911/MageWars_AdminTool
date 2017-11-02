@@ -8,27 +8,24 @@ import { Link } from 'react-router-dom';
 // BEGIN STYING
 // __________________________________________________________
 
-const Form = styled.form`
-  width: 50%;
-  margin: auto;
+const Header = styled.div`
+  background: white;
 `
 
 
 class Dashboard extends Component {
-  constructor(){
-    super()
-
-  }
 
   render() {
     return (
       <div>
-        <ul>
-          <li><Link to='/'>Dashboard</Link></li>
-          <li><Link to='/create'>Create Cards</Link></li>
-          <li><Link to='/manage/cards'>Manage Cards</Link></li>
-          <li><Link to='/manage/users'>Manage Users</Link></li>
-        </ul>
+        <Header>
+          <ul>
+            <li><Link to='/'>Dashboard</Link></li>
+            <li><Link to='/create'>Create Cards</Link></li>
+            <li><Link to='/cardManager'>Manage Cards</Link></li>
+          </ul>
+        </Header>
+        {this.props.children}
       </div>
     );
   }
