@@ -34,19 +34,19 @@ class CreateCardForm extends Component {
   constructor(){
     super()
     this.state = {
-      cardName: undefined,
-      primaryType: undefined,
-      subTypes: [{name: undefined}],
-      manaCsot: undefined,
-      action: undefined,
-      castRange: undefined,
-      target: undefined,
-      schools: [{name: undefined, level: undefined}],
-      armor: undefined,
-      health: undefined,
-      defense: {roll: undefined, uses: undefined},
-      channeling: undefined,
-      equipmentSlot: undefined,
+      cardName: "",
+      primaryType: "",
+      subTypes: [{name: ""}],
+      manaCost: "",
+      action: "",
+      castRange: "",
+      target: "",
+      schools: [{name: "", level: ""}],
+      armor: "",
+      health: "",
+      defense: {roll: "", uses: ""},
+      channeling: "",
+      equipmentSlot: "",
       abilities: [{
                     name: "",
                     action: "",
@@ -56,6 +56,7 @@ class CreateCardForm extends Component {
                     effects: [{roll: "", effectType: ""}],
                     traits: [{type: "", bonus: ""}]
                  }],
+      traits: [{trait: "", bonus: ""}],
       details: ""
     }
 
@@ -72,6 +73,17 @@ class CreateCardForm extends Component {
     }
     options = options.map((i) => {
       return <option value={`${i}`}>{i}</option>
+    })
+    return options
+  }
+  // Renders a specific amount of +... options (+1, +2, etc.)
+  renderOptionsPlus = (num) => {
+    let options = []
+    for (var i = 0; i < num; i++) {
+      options.push(i)
+    }
+    options = options.map((i) => {
+      return <option value={`+${i}`}>+{i}</option>
     })
     return options
   }
@@ -109,7 +121,10 @@ class CreateCardForm extends Component {
   }
   // ----- MANA COST -----
   handleManaCostChange = e => {
-    this.setState({ manaCsot: e.target.value })
+    this.setState({ manaCost: e.target.value })
+  }
+  handleActionChange = e => {
+    this.setState({ action: e.target.value })
   }
   // ----- CAST RANGE -----
   handleCastRangeChange = e => {
@@ -121,7 +136,6 @@ class CreateCardForm extends Component {
   }
   // ----- MAGIC SCHOOLS -----
   handleSchoolNameChange = idx => e => {
-    console.log(this.state.schools.name);
     const newSchools = this.state.schools.map((type, sidx) => {
       if (idx !== sidx) return type;
       return {...type, name: e.target.value}
@@ -129,7 +143,6 @@ class CreateCardForm extends Component {
     this.setState({ schools: newSchools })
   }
   handleSchoolLevelChange = idx => e => {
-    console.log(this.state.schools.level);
     const newSchools = this.state.schools.map((type, sidx) => {
       if (idx !== sidx) return type;
       return {...type, level: e.target.value}
@@ -226,121 +239,124 @@ class CreateCardForm extends Component {
     this.setState({ abilities: newAbilities })
   }
 
-// Effects -------
-handleAddAbilityEffect = idx => (e) => {
-  e.preventDefault()
-  const newAbilities = this.state.abilities.map((abil, aidx) => {
-    if (idx !== aidx) return abil
-      return {...abil, effects: this.state.abilities[idx].effects.concat([{ roll: "", effectType: ""}]) }
-  })
-  this.setState({ abilities: newAbilities })
-}
+  // Effects -------
+  handleAddAbilityEffect = idx => (e) => {
+    e.preventDefault()
+    const newAbilities = this.state.abilities.map((abil, aidx) => {
+      if (idx !== aidx) return abil
+        return {...abil, effects: this.state.abilities[idx].effects.concat([{ roll: "", effectType: ""}]) }
+    })
+    this.setState({ abilities: newAbilities })
+  }
 
-handleRemoveAbilityEffect = idx => (e) => {
-  e.preventDefault()
-  const newAbilities = this.state.abilities.map((abil, aidx) => {
-    if (idx !== aidx) return abil
-    return {...abil, effects: this.state.abilities[idx].effects.filter((eff, sidx) => idx !== sidx) }
-  })
-  this.setState({ abilities: newAbilities })
-}
+  handleRemoveAbilityEffect = idx => (e) => {
+    e.preventDefault()
+    const newAbilities = this.state.abilities.map((abil, aidx) => {
+      if (idx !== aidx) return abil
+      return {...abil, effects: this.state.abilities[idx].effects.filter((eff, sidx) => idx !== sidx) }
+    })
+    this.setState({ abilities: newAbilities })
+  }
 
-handleAbilityEffectRollChange = (idx, eidx) => e => {
-  const newAbilities = this.state.abilities.map((abil, aidx) => {
-    if (idx !== aidx) return abil
-      const newEffects = abil.effects.map((eff, tidx) => {
-        if (tidx !== eidx) return eff
-        return {...eff, roll: e.target.value}
-      })
-      return {...abil, effects: newEffects}
-  })
-  this.setState({ abilities: newAbilities })
-}
+  handleAbilityEffectRollChange = (idx, eidx) => e => {
+    const newAbilities = this.state.abilities.map((abil, aidx) => {
+      if (idx !== aidx) return abil
+        const newEffects = abil.effects.map((eff, tidx) => {
+          if (tidx !== eidx) return eff
+          return {...eff, roll: e.target.value}
+        })
+        return {...abil, effects: newEffects}
+    })
+    this.setState({ abilities: newAbilities })
+  }
 
-handleAbilityEffectTypeChange = (idx, eidx) => e => {
-  const newAbilities = this.state.abilities.map((abil, aidx) => {
-    if (idx !== aidx) return abil
-      const newEffects = abil.effects.map((eff, tidx) => {
-        if (tidx !== eidx) return eff
-        return {...eff, effectType: e.target.value}
-      })
-      return {...abil, effects: newEffects}
-  })
-  this.setState({ abilities: newAbilities })
-}
+  handleAbilityEffectTypeChange = (idx, eidx) => e => {
+    const newAbilities = this.state.abilities.map((abil, aidx) => {
+      if (idx !== aidx) return abil
+        const newEffects = abil.effects.map((eff, tidx) => {
+          if (tidx !== eidx) return eff
+          return {...eff, effectType: e.target.value}
+        })
+        return {...abil, effects: newEffects}
+    })
+    this.setState({ abilities: newAbilities })
+  }
 
-// Traits -----
-handleAddAbilityTrait = idx => (e) => {
-  e.preventDefault()
-  const newAbilities = this.state.abilities.map((abil, aidx) => {
-    if (idx !== aidx) return abil
-      return {...abil, traits: this.state.abilities[idx].traits.concat([{ type: "", bonus: ""}]) }
-  })
-  this.setState({ abilities: newAbilities })
-}
+  // Traits -------
+  handleAddAbilityTrait = idx => (e) => {
+    e.preventDefault()
+    const newAbilities = this.state.abilities.map((abil, aidx) => {
+      if (idx !== aidx) return abil
+        return {...abil, traits: this.state.abilities[idx].traits.concat([{ type: "", bonus: ""}]) }
+    })
+    this.setState({ abilities: newAbilities })
+  }
 
-handleRemoveAbilityTrait = idx => (e) => {
-  e.preventDefault()
-  const newAbilities = this.state.abilities.map((abil, aidx) => {
-    if (idx !== aidx) return abil
-    return {...abil, traits: this.state.abilities[idx].traits.filter((eff, sidx) => idx !== sidx) }
-  })
-  this.setState({ abilities: newAbilities })
-}
+  handleRemoveAbilityTrait = idx => (e) => {
+    e.preventDefault()
+    const newAbilities = this.state.abilities.map((abil, aidx) => {
+      if (idx !== aidx) return abil
+      return {...abil, traits: this.state.abilities[idx].traits.filter((eff, sidx) => idx !== sidx) }
+    })
+    this.setState({ abilities: newAbilities })
+  }
 
-handleAbilityTraitTypeChange = (idx, eidx) => e => {
-  const newAbilities = this.state.abilities.map((abil, aidx) => {
-    if (idx !== aidx) return abil
-      const newTraits = abil.traits.map((tra, tidx) => {
-        if (tidx !== eidx) return tra
-        return {...tra, type: e.target.value}
-      })
-      return {...abil, traits: newTraits}
-  })
-  this.setState({ abilities: newAbilities })
-}
+  handleAbilityTraitTypeChange = (idx, eidx) => e => {
+    const newAbilities = this.state.abilities.map((abil, aidx) => {
+      if (idx !== aidx) return abil
+        const newTraits = abil.traits.map((tra, tidx) => {
+          if (tidx !== eidx) return tra
+          return {...tra, type: e.target.value}
+        })
+        return {...abil, traits: newTraits}
+    })
+    this.setState({ abilities: newAbilities })
+  }
 
-handleAbilityTraitBonusChange = (idx, eidx) => e => {
-  const newAbilities = this.state.abilities.map((abil, aidx) => {
-    if (idx !== aidx) return abil
-      const newTraits = abil.traits.map((tra, tidx) => {
-        if (tidx !== eidx) return tra
-        return {...tra, bonus: e.target.value}
-      })
-      return {...abil, traits: newTraits}
-  })
-  this.setState({ abilities: newAbilities })
-}
+  handleAbilityTraitBonusChange = (idx, eidx) => e => {
+    const newAbilities = this.state.abilities.map((abil, aidx) => {
+      if (idx !== aidx) return abil
+        const newTraits = abil.traits.map((tra, tidx) => {
+          if (tidx !== eidx) return tra
+          return {...tra, bonus: e.target.value}
+        })
+        return {...abil, traits: newTraits}
+    })
+    this.setState({ abilities: newAbilities })
+  }
 
-// ----- EQUIPMENT -----
-handleDetailsChange = e => {
-  this.setState({ details: e.target.value })
-}
+  // ----- TRAITS -----
+  handleTraitNameChange = idx => e => {
+    const newTraits = this.state.traits.map((trait, sidx) => {
+      if (idx !== sidx) return trait;
+      return {...trait, trait: e.target.value}
+    })
+    this.setState({ traits: newTraits })
+  }
+  handleTraitBonusChange = idx => e => {
+    const newTraits = this.state.traits.map((trait, sidx) => {
+      if (idx !== sidx) return trait;
+      return {...trait, bonus: e.target.value}
+    })
+    this.setState({ traits: newTraits })
+  }
+  handleAddTrait = e => {
+    e.preventDefault()
+    this.setState({
+      traits: this.state.traits.concat([{ trait: "", bonus: ""}])
+    });
+  }
+  handleRemoveTrait = (idx) => (e) => {
+    e.preventDefault()
+    this.setState({
+      traits: this.state.traits.filter((t, sidx) => idx !== sidx) })
+  }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  // ----- DETAILS -----
+  handleDetailsChange = e => {
+    this.setState({ details: e.target.value })
+  }
 
   // SUBMIT CARD TO BE CREATED
   // __________________________________________________________
@@ -421,6 +437,7 @@ handleDetailsChange = e => {
           <PrimaryContainer>
             <PrimaryLabel>Cast Range:</PrimaryLabel>
               <select onChange={this.handleCastRangeChange}>
+                <option></option>
                 <option value="0-0">0-0</option>
                 <option value="0-1">0-1</option>
                 <option value="0-2">0-2</option>
@@ -634,6 +651,28 @@ handleDetailsChange = e => {
                   ))
                 }
                 <button onClick={this.handleAddAbility}>Add Ability</button>
+            </PrimaryContainer>
+
+            <PrimaryContainer>
+              <PrimaryLabel>Traits:</PrimaryLabel>
+              {
+                this.state.traits.map((trait, idx) => (
+                  <div>
+                  <label>Type:</label>
+                  <input
+                    placeholder={`Trait ${idx + 1}`}
+                    value={trait.name}
+                    onChange={this.handleTraitNameChange(idx)}
+                  />
+                <select onChange={this.handleTraitBonusChange(idx)}>
+                    <option></option>
+                    {this.renderOptionsPlus(10)}
+                  </select>
+                <button onClick={this.handleRemoveTrait(idx)}> Remove </button>
+                  </div>
+                ))
+              }
+              <button onClick={this.handleAddTrait}>Add Trait</button>
             </PrimaryContainer>
 
             <PrimaryContainer>

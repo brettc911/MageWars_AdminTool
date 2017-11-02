@@ -8,11 +8,13 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 // Import Components
 import CreateCardForm from './containers/CreateCardForm';
+import Dashboard from './containers/Dashboard';
 
 ReactDOM.render(
   <BrowserRouter>
       <Switch>
-        <Route path ="/" component={CreateCardForm} />
+        <Route path ="/create" component={CreateCardForm} />
+        <Route path ="/" component={Dashboard} />
       </Switch>
   </BrowserRouter>
   , document.getElementById('root'));
