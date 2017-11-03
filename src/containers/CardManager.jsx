@@ -8,8 +8,9 @@ import { Link } from 'react-router-dom';
 // BEGIN STYING
 // __________________________________________________________
 
-const Header = styled.div`
-  background: white;
+const H1 = styled.h1`
+  font-size: 20px;
+  text-align: center;
 `
 
 
@@ -19,6 +20,34 @@ class CardManager extends Component {
     this.state = {
       cards: []
     }
+  }
+
+  deleteCard = e => {
+    fetch(`https://secret-gorge-71512.herokuapp.com/api/card/${e.target.id}`, {
+      method: 'DELETE',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log(data);
+    })
+    .then(() => {
+      fetch('https://secret-gorge-71512.herokuapp.com/api/card', {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+        this.setState({ cards: data.results})
+      })
+    })
   }
 
   componentWillMount(){
@@ -31,17 +60,21 @@ class CardManager extends Component {
       })
       .then(response => response.json())
       .then(data => {
+        console.log(data);
         this.setState({ cards: data.results})
       })
-
   }
+
 
   render() {
     return (
       <div>
+        <H1>Cards List</H1>
         {
           this.state.cards.map((card, idx) => (
-            <h1>{card.cardName}</h1>
+            <div>
+            <h1>{card.cardName} <button id={card._id}onClick={this.deleteCard}>Delete</button></h1>
+            </div>
           ))
         }
       </div>

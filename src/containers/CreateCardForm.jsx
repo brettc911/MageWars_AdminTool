@@ -29,7 +29,6 @@ const SecondaryContainer = styled.div`
 `
 
 
-
 class CreateCardForm extends Component {
   constructor(){
     super()
@@ -47,16 +46,8 @@ class CreateCardForm extends Component {
       defense: {roll: "", uses: ""},
       channeling: "",
       equipmentSlot: "",
-      abilities: [{
-                    name: "",
-                    action: "",
-                    range: "",
-                    damageType: "",
-                    dice: "",
-                    effects: [{roll: "", effectType: ""}],
-                    traits: [{type: "", bonus: ""}]
-                 }],
-      traits: [{trait: "", bonus: ""}],
+      abilities: [],
+      traits: [],
       details: ""
     }
 
@@ -80,10 +71,11 @@ class CreateCardForm extends Component {
   renderOptionsPlus = (num) => {
     let options = []
     for (var i = 0; i < num; i++) {
-      options.push(i)
+      options.push(`+${i}`)
+      options.push(`-${i}`)
     }
-    options = options.map((i) => {
-      return <option value={`+${i}`}>+{i}</option>
+    options = options.map((o) => {
+      return <option value={`${o}`}>{o}</option>
     })
     return options
   }
@@ -193,8 +185,9 @@ class CreateCardForm extends Component {
         range: "",
         damageType: "",
         dice: "",
-        effects: [{roll: "", effectType: ""}],
-        traits: [{trait: "", bonus: ""}]
+        description: "",
+        effects: [],
+        traits: [],
      }])
    });
   }
@@ -238,6 +231,14 @@ class CreateCardForm extends Component {
     })
     this.setState({ abilities: newAbilities })
   }
+  handleAbilityDescriptionChange = idx => e => {
+    const newAbilities = this.state.abilities.map((abil, sidx) => {
+      if (idx !== sidx) return abil;
+      return {...abil, description: e.target.value}
+    })
+    this.setState({ abilities: newAbilities })
+  }
+
 
   // Effects -------
   handleAddAbilityEffect = idx => (e) => {
@@ -282,7 +283,7 @@ class CreateCardForm extends Component {
     this.setState({ abilities: newAbilities })
   }
 
-  // Traits -------
+  // Ability Traits -------
   handleAddAbilityTrait = idx => (e) => {
     e.preventDefault()
     const newAbilities = this.state.abilities.map((abil, aidx) => {
@@ -389,13 +390,21 @@ class CreateCardForm extends Component {
 
           <PrimaryContainer>
             <PrimaryLabel>Card Name:</PrimaryLabel>
-            <input onChange={this.handleCardNameChange} />
+            <input onChange={this.handleCardNameChange} value={this.state.cardName} />
           </PrimaryContainer>
 
 
           <PrimaryContainer>
             <PrimaryLabel>Primary-type:</PrimaryLabel>
-            <input onChange={this.handlePrimaryTypeChange} />
+              <select onChange={this.handlePrimaryTypeChange}>
+                <option></option>
+                <option value="Creature">Creature</option>
+                <option value="Equipment">Equipment</option>
+                <option value="Enchantment">Enchantment</option>
+                <option value="Incantation">Incantation</option>
+                <option value="Conjuration">Conjuration</option>
+                <option value="Attack">Attack</option>
+              </select>
           </PrimaryContainer>
 
 
@@ -457,12 +466,20 @@ class CreateCardForm extends Component {
               this.state.schools.map((type, idx) => (
                 <div>
                 <label>Name:</label>
-                <input
-                  placeholder={`School ${idx + 1}`}
-                  value={type.name}
-                  onChange={this.handleSchoolNameChange(idx)}
-                />
-              <select onChange={this.handleSchoolLevelChange(idx)}>
+                <select onChange={this.handleSchoolNameChange(idx)}>
+                  <option></option>
+                  <option value='Holy'>Holy</option>
+                  <option value='Nature'>Nature</option>
+                  <option value='Dark'>Dark</option>
+                  <option value='Mind'>Mind</option>
+                  <option value='Arcane'>Arcane</option>
+                  <option value='War'>War</option>
+                  <option value='Fire'>Fire</option>
+                  <option value='Earth'>Earth</option>
+                  <option value='Air'>Air</option>
+                  <option value='Water'>Water</option>
+                </select>
+                <select onChange={this.handleSchoolLevelChange(idx)}>
                   <option></option>
                   {this.renderOptions(7)}
                 </select>
@@ -492,6 +509,12 @@ class CreateCardForm extends Component {
                   <option value="1+">1+</option>
                   <option value="2+">2+</option>
                   <option value="3+">3+</option>
+                  <option value="4+">4+</option>
+                  <option value="5+">5+</option>
+                  <option value="6+">6+</option>
+                  <option value="7+">7+</option>
+                  <option value="8+">8+</option>
+                  <option value="9+">9+</option>
                 </select>
                 <label>Defense use number:</label>
                 <select onChange={this.handleDefenseUsesChange}>
@@ -611,6 +634,7 @@ class CreateCardForm extends Component {
                         <option value="poison">Poison</option>
                         <option value="psychic">Psychic</option>
                         <option value="wind">Wind</option>
+                        <option value="heal">Heal</option>
                       </select>
                       <label>Damage Dice:</label>
                       <select onChange={this.handleAbilityDiceChange(idx)}>
@@ -645,6 +669,8 @@ class CreateCardForm extends Component {
                           ))
                         }
                         <button onClick={this.handleAddAbilityTrait(idx)}>Add Trait</button>
+                      <label>Description:</label>
+                        <textarea rows="5" cols="10" onChange={this.handleAbilityDescriptionChange(idx)}></textarea>
 
                       <button onClick={this.handleRemoveAbility(idx)}> Remove Ability </button>
                     </SecondaryContainer>
