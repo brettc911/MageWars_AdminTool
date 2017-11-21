@@ -23,6 +23,7 @@ class Dashboard extends Component {
             <li><Link to='/'>Dashboard</Link></li>
             <li><Link to='/create'>Create Cards</Link></li>
             <li><Link to='/cardManager'>Manage Cards</Link></li>
+            <li><Link to='/deckManager'>Manage Decks</Link></li>
           </ul>
         </Header>
         {this.props.children}

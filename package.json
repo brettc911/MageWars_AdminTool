@@ -1,5 +1,5 @@
 {
-  "name": "magewars_deckbuilder",
+  "name": "magewars_admintool",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

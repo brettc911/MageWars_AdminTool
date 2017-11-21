@@ -10,6 +10,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import CreateCardForm from './containers/CreateCardForm';
 import Dashboard from './containers/Dashboard';
 import CardManager from './containers/CardManager';
+import DeckManager from './containers/DeckManager';
 
 ReactDOM.render(
   <BrowserRouter>
@@ -17,6 +18,7 @@ ReactDOM.render(
         <Dashboard>
           <Route path ="/create" component={CreateCardForm} />
           <Route path ="/cardManager" component={CardManager} />
+          <Route path ="/DeckManager" component={DeckManager} />
         </Dashboard>
       </Switch>
   </BrowserRouter>
