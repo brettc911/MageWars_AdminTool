@@ -50,10 +50,7 @@ class CreateCardForm extends Component {
       traits: [],
       details: ""
     }
-
   }
-
-
 
 
   // Renders a specific amount of single digit options (1,2,3...)

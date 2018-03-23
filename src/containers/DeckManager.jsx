@@ -51,18 +51,23 @@ class DeckManager extends Component {
   }
 
   componentWillMount(){
-      fetch('https://secret-gorge-71512.herokuapp.com/api/deck', {
-        method: 'GET',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        }
-      })
-      .then(response => response.json())
-      .then(data => {
-        console.log(data);
-        this.setState({ decks: data.results})
-      })
+    fetch('https://secret-gorge-71512.herokuapp.com/api/deck', {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log(data);
+      this.setState({ decks: data.results})
+    })
+  }
+
+  showState = e => {
+    e.preventDefault
+    console.log(this.state);
   }
 
 
@@ -70,6 +75,7 @@ class DeckManager extends Component {
     return (
       <div>
         <H1>Decks List</H1>
+        <button onClick={this.showState}>Show State</button>
         {
           this.state.decks.map((deck, idx) => (
             <div>
